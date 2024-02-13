@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bingo Game</title>
+    <style>
+        .number {
+            width: 100px;
+            height: 100px;
+            background-color: lightblue;
+            border: 1px solid black;
+            margin: 5px;
+            display: inline-block;
+            text-align: center;
+            line-height: 100px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gift-image {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: none;
+        }
+
+        .rotate {
+            animation: rotate 1s infinite;
+        }
+
+        header {
+            display: flex;
+            justify-content: center;
+            /* Horizontally center the items */
+            align-items: center;
+            /* Vertically center the items */
+            height: 200px;
+            /* Adjust the height as needed */
+        }
+
+        .sponsor-logo {
+            width: 200px;
+            /* Adjust as needed */
+            height: auto;
+            /* Adjust as needed */
+            margin-right: 10px;
+            border-radius: 50%;
+            /* Make the image round */
+            overflow: hidden;
+            /* Hide overflow if the image is not perfectly round */
+        }
+
+        .sponsor-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            /* Fill the container while preserving aspect ratio */
+        }
+
+        @keyframes rotate {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header with sponsor logos -->
+    <header>
+        <img class="sponsor-logo" src="vietq.png" alt="Sponsor 1 Logo">
+        <img class="sponsor-logo" src="aug.png" alt="Sponsor 2 Logo">
+        <img class="sponsor-logo" src="QUTGuild.png" alt="Sponsor 3 Logo">
+    </header>
+
+    <h1>Bingo Game</h1>
+    <div id="gift-info">
+        Total Gifts: <span id="total-gifts">0</span> | Remaining: <span id="remaining-gifts">0</span>
+    </div>
+    <div id="board">
+        <!-- Generate 90 numbers with different gifts -->
+        <script>
+            // Array of gifts with images
+            const gifts = [
+                { type: 'cashew_bag', quantity: 75, image: 'cashew.jpg' },
+                { type: 'tshirt', quantity: 5, image: 'Tshirt.jpg' },
+                { type: 'books', quantity: 5, image: 'book.jpeg' }
+            ];
+
+            // Remaining numbers will have the gift of a pen
+            const penGifts = 90 - gifts.reduce((total, gift) => total + gift.quantity, 0);
+            console.log(penGifts);
+            // Create an array to store gifts for each number
+
+            const numbersGifts = [];
+            function numberExists(number) {
+                return numbersGifts.some(obj => obj.number === number);
+            }
+
+            // Populate the array with the corresponding gift for each number
+            gifts.forEach(gift => {
+                for (let i = 0; i < gift.quantity; i++) {
+                    let randomNumber;
+                    do {
+                        randomNumber = Math.floor(Math.random() * 90) + 1;
+                    } while (numberExists(randomNumber));
+                    numbersGifts.push({ number: randomNumber, gift: gift });
+                }
+            });
+
+            // Assign remaining numbers the gift of a pen
+            for (let i = 0; i < penGifts; i++) {
+                let randomNumber;
+                do {
+                    randomNumber = Math.floor(Math.random() * 90) + 1;
+                } while (numberExists(randomNumber));
+                numbersGifts.push({ number: randomNumber, gift: { type: 'pen', image: 'pen.jpeg' } });
+            }
+            const totalGifts = numbersGifts.length;
+            let remainingGifts = totalGifts;
+
+            // Update text elements with total and remaining gifts
+            document.getElementById('total-gifts').textContent = totalGifts;
+            document.getElementById('remaining-gifts').textContent = remainingGifts;
+
+            // // Shuffle the array to randomize the gifts
+            // shuffle(numbersGifts);
+
+            // // Populate gifts on the board
+            // numbersGifts.forEach(obj => {
+            //     const { number, gift } = obj;
+            //     document.write(`<div class="number" id="num${number}" onclick="revealGift(${number}, '${gift.type}')">${number}<img class="gift-image" src="${gift.image}"></div>`);
+            // });
+
+            // // Shuffle function
+            // function shuffle(array) {
+            //     for (let i = array.length - 1; i > 0; i--) {
+            //         const j = Math.floor(Math.random() * (i + 1));
+            //         [array[i], array[j]] = [array[j], array[i]];
+            //     }
+            //     return array;
+            // }
+            // Sort numbersGifts by number from small to big
+            numbersGifts.sort((a, b) => a.number - b.number);
+
+            // Populate gifts on the board
+            numbersGifts.forEach(obj => {
+                const { number, gift } = obj;
+                document.write(`<div class="number" id="num${number}" onclick="revealGift(${number}, '${gift.type}')">${number}<img class="gift-image" src="${gift.image}"></div>`);
+            });
+        </script>
+    </div>
+
+    <script>
+        function revealGift(number, giftType) {
+            const element = document.getElementById(`num${number}`);
+            const image = element.querySelector('.gift-image');
+            image.style.display = 'block';
+            element.classList.add('rotate');
+            // Play clap sound
+            //  const clapSound = new Audio('sound_clap.mp3');
+            //     clapSound.play();
+            remainingGifts--; // Decrease remaining gifts count
+            document.getElementById('remaining-gifts').textContent = remainingGifts;
+
+            setTimeout(() => {
+                element.classList.remove('rotate');
+                // clapSound.pause();
+            }, 1000); // Change 1000 to adjust animation duration (in milliseconds)
+        }
+
+    </script>
+    <!-- Background music -->
+    <audio autoplay loop>
+        <source src="NhacXoSo.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+</body>
+
+</html>

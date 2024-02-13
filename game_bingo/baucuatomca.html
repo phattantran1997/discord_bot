@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gourd, Crab, Fish, Tiger Game</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+    }
+    #game-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        margin-top: 50px;
+    }
+    #result {
+        font-size: 20px;
+        margin-top: 20px;
+    }
+</style>
+</head>
+<body>
+    <h1>Gourd, Crab, Fish, Tiger Game</h1>
+    <div id="game-container">
+        <img src="gourd.png" alt="Gourd" id="gourd" class="choice">
+        <img src="crab.png" alt="Crab" id="crab" class="choice">
+        <img src="fish.png" alt="Fish" id="fish" class="choice">
+        <img src="tiger.png" alt="Tiger" id="tiger" class="choice">
+    </div>
+    <button onclick="playGame()">Play</button>
+    <div id="result"></div>
+
+<script>
+    function playGame() {
+        const options = ['Gourd', 'Crab', 'Fish', 'Tiger'];
+        const computerChoice = options[Math.floor(Math.random() * options.length)];
+        document.getElementById('result').innerText = `Computer chose: ${computerChoice}`;
+        
+        // Highlight the computer's choice
+        document.querySelectorAll('.choice').forEach(choice => {
+            choice.classList.remove('highlight');
+            if (choice.alt === computerChoice) {
+                choice.classList.add('highlight');
+            }
+        });
+    }
+</script>
+</body>
+</html>
+    
